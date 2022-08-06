@@ -1,0 +1,20 @@
+{
+  "name": "article_progress_app",
+  "version": "1.0.0",
+  "description": "App to track progress of Upwork person and approve articles",
+  "main": "index.js",
+  "scripts": {
+    "test": "index"
+  },
+  "author": "Manya",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "*",
+    "consolidate": "*",
+    "dotenv": "^16.0.1",
+    "dust": "*",
+    "dustjs-helpers": "*",
+    "express": "*",
+    "pg": "*"
+  }
+}

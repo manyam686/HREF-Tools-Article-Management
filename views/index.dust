@@ -1,0 +1,142 @@
+{>"layout" /}
+
+{<body}
+    <br />
+    <h1 class="position-absolute start-50 translate-middle">Articles</h1>
+    <br />
+    <br />
+    {#articles}
+        <div class="card">
+            <div class="card-body">
+                <h4>{ar_title} <button class="btn btn-default pull-right" 
+                    data-bs-toggle="collapse" href="#article_{articleno}" role="button" 
+                    aria-expanded="false" aria-controls="article_{articleno}"><i class="bi bi-caret-down-fill">
+                    </i></button>
+                    
+                    {@eq key=ar_status value="raw"}<i class="bi bi-hourglass" style="color: red"></i>{/eq}
+                    {@eq key=ar_status value="queued"}<i class="bi bi-hourglass-top" style="color:gold"></i>{/eq}
+                    {@eq key=ar_status value="inprogress"}<i class="bi bi-hourglass-split" style="color:gold"></i>{/eq}
+                    {@eq key=ar_status value="edited"}<i class="bi bi-hourglass-bottom" style="color:limegreen"></i>{/eq}
+                    {@eq key=ar_status value="approved"}<i class="bi bi-check-circle-fill"></i>{/eq}
+
+                    <!-- <span>{articleno}</span> -->
+                    <!-- {@eq key=ar_anneditstatus value="edited"}<i class="bi bi-tag-fill" style="color:limegreen; padding:10px;"></i>{/eq}
+                    {@eq key=ar_anneditstatus value="unedited"}<i class="bi bi-tag-fill" style="color:red; padding:10px;"></i>{/eq} -->
+                   
+                </h4>
+                
+            </div>
+            <!-- Article dropdown - show rendered article html, edit/approval buttons -->
+            <div class="collapse" id="article_{articleno}">
+                <div class="card-body">
+                    {ar_contenthtml|s}
+                    <br />
+                    <br />
+                    {@eq key=ar_status value="edited"}
+                    <button class="btn btn-default view-article"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#viewModal"
+                        data-ar_contenthtml = "{ar_contenthtml}">
+                        <i class="bi bi-eye-fill">View</i>
+                    </button>
+                    <button class="btn btn-default edit-article"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editFormModal"
+                        data-articleno="{articleno}"
+                        data-ar_contenthtml = "{ar_contenthtml}">
+                        <i class="bi bi-pen-fill">Edit</i>
+                    </button>
+                    <button class="btn btn-default approve-article" data-articleno="{articleno}"><i class="bi bi-check-circle-fill">Approve</i></button>{/eq}
+                    <button class="btn btn-default edit-tags"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editTagsFormModal"
+                        data-articleno="{articleno}"
+                        data-tags = "{tags}">
+                        <i class="bi bi-tag-fill">Edit Tags</i></button>
+                </div>
+            </div>
+        </div>
+    
+    {/articles}
+
+    <!-- Edit article modal -->
+    <div class="modal" id="editFormModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <form action="/edit" method="post">
+                <input type="hidden" name="articleno" id="edit-form-articleno">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Article</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Article HTML</label>
+                        <textarea name="ar_contenthtml" id="edit-form-ar_contenthtml" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save Changes" />
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <!-- View article modal -->
+    <div class="modal" id="viewModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Article HTML</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="view-modal-ar_contenthtml" style="width:100%"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit tags modal -->
+      <div class="modal" id="editTagsFormModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <form action="/editTags" method="post">
+                <input type="hidden" name="articleno" id="edit-tags-form-articleno">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Tags</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="edit-tags-form-tags" class="col-sm-4 col-form-label">Article Tags:</label>
+                        <div class="col-sm-8">
+                            <input type="text" readonly name="tags" id="edit-tags-form-tags" class="form-control-plaintext"></input>
+                        </div>                      
+                    </div>
+                    <div class="form-group row">
+                        <label for="tagSelection" class="col-sm-4 col-form-label">Add Tag:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control form-select" id="tagSelection" name="tagSelection">
+                                <option selected></option>
+                                {#tags}
+                                <option>{tg_phrase}</option>
+                                {/tags}
+                            </select>
+                        </div> 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save Changes" />
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+{/body}
