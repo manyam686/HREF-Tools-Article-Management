@@ -17,6 +17,6 @@ This mini web app was created for HREF Tools Corp. owner to track the progress o
 * The user can edit an article's html:
 ![image](/readme_images/edit_article.PNG)
 * Or add tags:
-![image](/readme_images/add_tags.PNG)
+![image](/readme_images/edit_tags.PNG)
 * And finally approve the article edits.
 
